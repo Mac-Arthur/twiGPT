@@ -1,31 +1,30 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AI Assistant</title>
+    <title>TwiGPT</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
-      @keyframes rotate {
+        @keyframes rotate {
             from {
                 transform: rotate(0deg);
             }
-            to { 
+            to {
                 transform: rotate(360deg);
             }
         }
-         
-        
-         @-webkit-keyframes rotate {
+
+        @-webkit-keyframes rotate {
             from {
                 -webkit-transform: rotate(0deg);
             }
-            to { 
+            to {
                 -webkit-transform: rotate(360deg);
             }
         }
-        
+
         .load {
             width: 80px;
             height: 80px;
@@ -35,99 +34,161 @@
             border-right-color: transparent;
             border-bottom-color: transparent;
             -webkit-transition: all 0.5s ease-in;
-            -webkit-animation-name: rotate; 
-            -webkit-animation-duration: 1.0s; 
+            -webkit-animation-name: rotate;
+            -webkit-animation-duration: 1.0s;
             -webkit-animation-iteration-count: infinite;
             -webkit-animation-timing-function: linear;
-                
+
             transition: all 0.5s ease-in;
-            animation-name: rotate; 
-            animation-duration: 1.0s; 
+            animation-name: rotate;
+            animation-duration: 1.0s;
             animation-iteration-count: infinite;
-            animation-timing-function: linear; 
+            animation-timing-function: linear;
         }
 
-        
-    </style>
-  </head>
-  <body class="bg-white text-white">
-    <!-- START OF NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">TWI-GPT</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active" href="#">About</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <!-- END OF NAVBAR -->
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
 
-      <!-- START OF MAIN -->
-      <div class="container my-5">
+        @keyframes blinkTextCursor {
+            from { border-right-color: rgba(255, 255, 255, 0.75); }
+            to { border-right-color: transparent; }
+        }
+
+        .typewriter h1 {
+            overflow: hidden; /* Ensures the text is not visible before animation starts */
+            border-right: .01em solid white; /* The cursor effect */
+            white-space: nowrap; /* Keeps the text in a single line */
+            margin: 0 auto; /* Gives that scrolling effect as the typing happens */
+            letter-spacing: .15em; /* Adjust as needed */
+            animation:
+                typewriter 3.5s steps(30, end),
+                blinkTextCursor 0.75s step-end infinite;
+        }
+    </style>
+</head>
+<body class="bg-white text-white">
+    <!-- START OF NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">TwiGPT</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- END OF NAVBAR -->
+
+    <!-- START OF MAIN -->
+   
+    
+    <div class="container-fluid my-5">
         <div class="row">
-            <div class="col-lg-2"></div>
-            <div class="col-lg-8">
-                <div class="card p-5 bg-light text-black">
-                  <div class="text-center mb-4">
-                    <h1 class="display-6">TwiGPT (1.0)</h1>
-                    <p class="lead">We're on a mission to bridge the language gap and empower you with a virtual assistant that understands Twi. Our innovative AI technology allows you to interact seamlessly in your native language. Use the form below to experience the future of language interaction.</p>
-                  </div>
-      
-                  <form id="inputForm" class="mb-4">
-                    <div class="form-group mb-3">
-                      <label for="language" class="form-label">Select Language:</label>
-                      <select class="form-select" name="language" id="language">
-                        <option value="english">Twi</option>
-                        <option value="twi">English</option>
-                      </select>
+            <!-- START OF SIDEBAR -->
+            <div class="col-lg-3">
+                <div id="sidebarCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <h5 class="text-center text-black">Nsɛmmisa Dedaw</h5>
+                        </div>
+                        <div class="carousel-item">
+                            <h5 class="text-center text-black">Old Queries</h5>
+                        </div>
                     </div>
-                    <div class="form-group mb-3">
-                      <label for="input_text" class="form-label">Enter Text:</label>
-                      <div class="input-group">
-                        <input type="text" class="form-control" id="input_text" name="input_text">
-                        <button class="btn btn-secondary" type="submit"><i class="fas fa-paper-plane"></i></button>
-                      </div>
-                    </div>
-                  </form>
-                  <div id="response" class="alert alert-info" role="alert" style="display: none;"></div>
-                  <div class="text-center mt-4 load" id="loadingcircle" style="display:none;"></div>
-                  <div class="form-group mt-4">
-                    <label for="result" class="form-label">Result:</label>
-                    <div class="input-group">
-                      <input type="text" class="form-control" id="result" name="result" readonly>
-                      <button class="btn btn-secondary" type="button" id="speakButton"><i class="fas fa-volume-up"></i></button>
-                    </div>
-                  </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#sidebarCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#sidebarCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            
+                <div class="list-group mt-3" id="queryList" style="max-height: 550px; overflow-y: auto;">
+                    <!-- Old queries will be dynamically added here -->
                 </div>
             </div>
-            <div class="col-lg-2"></div>
+            
+            
+            <!-- END OF SIDEBAR -->
+
+            <div class="col-lg-8">
+                <div class="card p-5 bg-light text-black">
+                    <div class="text-center mb-4">
+                        <div class="typewriter">
+                          
+                            <h1 class="display-5">TwiGPT(1.0)</h1>
+                        </div>
+                       
+                        <p class="lead mt-1 fw-semibold">We are on a mission to bridge the language gap and empower you with a generative assistant that understands Twi. Our innovative AI technology allows you to interact seamlessly in your native language. Use the form below to experience the future of language interaction.</p>
+                        <p>Computer Engineering Department, University of Ghana.</p>
+                    </div>
+
+                    <form id="inputForm" class="mb-4">
+                        <div class="form-group mb-3">
+                            <label for="language" class="form-label">Select Language:</label>
+                            <select class="form-select" name="language" id="language">
+                                <option value="english">Twi</option>
+                                <option value="twi">English</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="input_text" class="form-label">Enter Text:</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="input_text" name="input_text">
+                                <button class="btn btn-secondary" type="submit"><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="response" class="alert alert-info" role="alert" style="display: none;"></div>
+                    <div class="text-center mt-4 load" id="loadingcircle" style="display:none;"></div>
+                    <div class="form-group mt-4">
+                        <label for="result" class="form-label">Result:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="result" name="result" readonly>
+                            <button class="btn btn-secondary" type="button" id="speakButton"><i class="fas fa-volume-up"></i></button>
+                        </div>
+                    </div>
+                    <div>
+
+                    </div>
+                    
+                </div>
+                <div class="text-center my-2">
+                    <small class="text-black">TwiGPT can be inaccurate. Double-check important info</small>
+                </div>
+            </div>
+            <div class="col-lg-1"></div>
         </div>
     </div>
-<!-- END OF MAIN SECTION -->
+    <!-- END OF MAIN SECTION -->
 
-<!-- START OF FOOTER SECTION -->
- <footer class="mt-5 text-center">
-  <p class="text-black-50">Powered by Immanuel Mac-Arthur, Kofi Nyame, and Emmanuella Lamptey.</p>
-  <p class="text-black-50">Supervised by Dr. Nii Longdon Sowah (Ph.D).</p>
-  <p class="text-black-50">Computer Engineering Department, University of Ghana.</p>
- </footer>
-
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/6.0.0/intro.min.js" integrity="sha512-mceGQCYWZuRNu27jG8kIrAWT++MIJ1HUEiXy0BTJNkuJEeislqxEZ1KIyfHNMh2YWYAf3oCumvhFV5VYoFfVlA==" crossorigin="anonymous"></script>
- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-Z7p2I1SB+Q+mF3yXSwopjKKczL0ASGyg5AWs5t7gnAJGqRYbDHnbbUNL9g5kwzZX" crossorigin="anonymous"></script>
- <script>
-
-$(document).ready(function(){
+    <!-- START OF FOOTER SECTION -->
+    <footer class="mt-5 text-center">
+      <small>
+        <p class="text-black-50">Powered by Immanuel Mac-Arthur, Kofi Nyame, and Emmanuella Lamptey.</p>
+        <p class="text-black-50">Supervised by Dr. Nii Longdon Sowah (Ph.D).</p>
+        <p class="text-black-50">Computer Engineering Department, University of Ghana.</p>
+      </small>
+     
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/6.0.0/intro.min.js" integrity="sha512-mceGQCYWZuRNu27jG8kIrAWT++MIJ1HUEiXy0BTJNkuJEeislqxEZ1KIyfHNMh2YWYAf3oCumvhFV5VYoFfVlA==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-Z7p2I1SB+Q+mF3yXSwopjKKczL0ASGyg5AWs5t7gnAJGqRYbDHnbbUNL9g5kwzZX" crossorigin="anonymous"></script>
+    <script>
+       $(document).ready(function(){
     $('#inputForm').submit(function(event){
         event.preventDefault();
         $('#loadingcircle').show(); // Show loading spinner
@@ -144,6 +205,7 @@ $(document).ready(function(){
                 $('#loadingcircle').hide(); // Hide loading spinner
                 $('#response').text(response.response).show(); // Show response
                 $('#result').val(response.response); // Populate result input field
+                addQueryToSidebar(formData.input_text, response.response); // Add query to sidebar
             },
             error: function(error){
                 $('#loadingcircle').hide(); // Hide loading spinner
@@ -151,6 +213,46 @@ $(document).ready(function(){
             }
         });
     });
+
+    // Fetch old queries on page load
+    fetchOldQueries();
+
+    // Function to fetch old queries
+    function fetchOldQueries() {
+        $.ajax({
+            type: 'GET',
+            url: '/old_queries/',
+            dataType: 'json',
+            success: function(data) {
+                data.forEach(query => {
+                    addQueryToSidebar(query.query, query.response);
+                });
+            },
+            error: function(error){
+                console.error('Error fetching old queries', error);
+            }
+        });
+    }
+
+    // Function to apply typewriter effect
+    function typeWriterEffect(element, text, speed) {
+        element.innerHTML = ""; // Clear the content of the element
+        let i = 0;
+        function type() {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, speed);
+            }
+        }
+        type();
+    }
+
+    // Apply the typewriter effect to the h1 element
+    const h1Element = document.querySelector('.typewriter h1');
+    if (h1Element) {
+        typeWriterEffect(h1Element, h1Element.textContent, 100); // Adjust the speed as needed
+    }
 });
 
 // Declare a global variable to hold the SpeechSynthesisUtterance instance
@@ -168,7 +270,7 @@ function speakText(text) {
         utterance = new SpeechSynthesisUtterance(text);
         window.speechSynthesis.speak(utterance);
         isSpeaking = true;
-        
+
         // Set the isSpeaking flag to false when speech ends
         utterance.onend = function() {
             isSpeaking = false;
@@ -181,10 +283,17 @@ document.getElementById('speakButton').addEventListener('click', function() {
     var resultText = document.getElementById('result').value;  // Assuming 'result' is the ID of your result input field
     speakText(resultText);
 });
-</script>
+
+// Function to add query to sidebar
+function addQueryToSidebar(query, response) {
+    var queryList = document.getElementById('queryList');
+    var newItem = document.createElement('li');
+    newItem.className = 'list-group-item';
+    newItem.innerHTML = `<strong>Query:</strong> ${query} <br> <strong>Response:</strong> ${response}`;
+    queryList.appendChild(newItem);
+}
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
-</html>
-   
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  </body>
 </html>

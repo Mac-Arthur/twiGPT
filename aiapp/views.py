@@ -1,18 +1,16 @@
 import pyttsx3
 import datetime
-import speech_recognition as sr
-import pyjokes
-import schedule
-import time
-from plyer import notification
-import re
-import json
-import google.generativeai as genai
 import requests
+import google.generativeai as genai
 import spacy
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+import concurrent.futures
+import logging
+
+# Initialize logging
+logging.basicConfig(level=logging.INFO)
 
 # Initialize Spacy
 nlp = spacy.load("en_core_web_sm")
@@ -28,32 +26,31 @@ engine.setProperty('rate', rate - 50)
 model = genai.GenerativeModel('gemini-pro')
 talk = []
 
-# File for reminders
-REMINDERS_FILE = "reminders.json"
-
-# Initialize reminders list
-reminders = []
+# List to store old queries
+old_queries = []
 
 # Function to speak out text
 def speak(audio):
     engine.say(audio)
     engine.runAndWait()
 
-# Function to translate Twi to English
-def translate_to_english(input_text):
+# Function to translate text using Google Translate API
+def translate_text(input_text, source_lang, target_lang):
     url = "https://translate.googleapis.com/translate_a/single"
     params = {
         "client": "gtx",
-        "sl": "tw",
-        "tl": "en",
+        "sl": source_lang,
+        "tl": target_lang,
         "dt": "t",
         "q": input_text
     }
-    response = requests.get(url, params=params)
-    if response.status_code == 200:
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()
         translation = response.json()[0][0][0]
         return translation
-    else:
+    except requests.RequestException as e:
+        logging.error(f"Translation error: {e}")
         return None
 
 # Function to handle conversational AI commands
@@ -62,7 +59,7 @@ def handle_conversational_ai_command(query):
     talk.append({'role': 'user', 'parts': [query]})
     response = model.generate_content(talk, stream=True)
     answer_found = False
-    num_sentences = 0
+    num_sentences = ""
     answer = ""
 
     for chunk in response:
@@ -71,7 +68,7 @@ def handle_conversational_ai_command(query):
             if sentence:
                 answer += sentence + " "
                 num_sentences += 1
-                if num_sentences >= 4:
+                if num_sentences >= 5:
                     break
 
     if answer:
@@ -81,42 +78,35 @@ def handle_conversational_ai_command(query):
     
     talk.append({'role': 'model', 'parts': [answer if answer_found else "No answer found"]})
     return answer
+    
+
+# Example usage
+talk = []
+user_query = "What's the weather like today?"
+response = handle_conversational_ai_command(user_query)
+print(response)
+
 
 # Function to handle actions based on the input text
 def perform_action(input_text):
-    if "how are you" in input_text.lower():
-        speak("me ho yɛ")
-        return "me ho yɛ"
-    elif "thank you" in input_text.lower():
-        speak("ɛnna ase")
-        return "ɛnna ase"
-    elif "time" in input_text.lower():
-        current_time = f"Mprempren bere no ne {datetime.datetime.now().strftime('%I:%M %p')}."
-        speak(current_time)
-        return current_time
-    else:
         return handle_conversational_ai_command(input_text)
-
-# Function to greet the user
-def greet():
-    hour = datetime.datetime.now().hour
-    if 6 <= hour < 12:
-        speak("Good morning user") 
-    elif 12 <= hour < 18:
-        speak("Good afternoon user")
-    elif 18 <= hour < 24:
-        speak("Good evening user")
-    else:
-        speak("Hello user") 
 
 # Function to handle the translation and action processing
 def process_twi_text(input_text):
-    english_translation = translate_to_english(input_text)
-    if english_translation:
-        response = perform_action(english_translation)
-        return response
-    else:
-        return "Translation failed."
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        future_english_translation = executor.submit(translate_text, input_text, "tw", "en")
+        english_translation = future_english_translation.result()
+        
+        if english_translation:
+            response = perform_action(english_translation)
+            future_twi_translation = executor.submit(translate_text, response, "en", "tw")
+            twi_translation = future_twi_translation.result()
+            if twi_translation:
+                return english_translation, response, twi_translation
+            else:
+                return english_translation, response, "Twi translation failed."
+        else:
+            return None, None, "Translation failed."
 
 # Django view to render the home page
 def index(request):
@@ -127,6 +117,21 @@ def index(request):
 def translate(request):
     if request.method == 'POST':
         input_text = request.POST.get('input_text')
-        response = process_twi_text(input_text)
-        return JsonResponse({'response': response})
+        english_translation, response, twi_translation = process_twi_text(input_text)
+        
+        if english_translation and response:
+            # Store the query and response
+            old_queries.append({
+                "query": input_text,
+                "response": twi_translation
+            })
+
+        return JsonResponse({'response': twi_translation})
+    return JsonResponse({'response': 'Invalid request'}, status=400)
+
+# Django view to fetch old queries
+@csrf_exempt
+def get_old_queries(request):
+    if request.method == 'GET':
+        return JsonResponse(old_queries, safe=False)
     return JsonResponse({'response': 'Invalid request'}, status=400)
