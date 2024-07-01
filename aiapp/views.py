@@ -59,7 +59,7 @@ def handle_conversational_ai_command(query):
     talk.append({'role': 'user', 'parts': [query]})
     response = model.generate_content(talk, stream=True)
     answer_found = False
-    num_sentences = ""
+    num_sentences = 0  # Initialize as an integer
     answer = ""
 
     for chunk in response:
@@ -78,7 +78,6 @@ def handle_conversational_ai_command(query):
     
     talk.append({'role': 'model', 'parts': [answer if answer_found else "No answer found"]})
     return answer
-    
 
 # Example usage
 talk = []
@@ -86,10 +85,9 @@ user_query = "What's the weather like today?"
 response = handle_conversational_ai_command(user_query)
 print(response)
 
-
 # Function to handle actions based on the input text
 def perform_action(input_text):
-        return handle_conversational_ai_command(input_text)
+    return handle_conversational_ai_command(input_text)
 
 # Function to handle the translation and action processing
 def process_twi_text(input_text):
